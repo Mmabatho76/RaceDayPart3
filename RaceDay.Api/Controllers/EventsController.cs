@@ -1,10 +1,12 @@
+
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
 using RaceDay.Api.Dtos;
 using RaceDay.Api.Models;
 using RaceDay.Api.Security;
-
+using RaceDay.Api.Storage;
 
 namespace RaceDay.Api.Controllers;
 
@@ -13,7 +15,13 @@ namespace RaceDay.Api.Controllers;
 public class EventsController : ApiControllerBase
 {
     private readonly RaceDayDbContext _db;
+    private readonly UploadPaths _paths;
 
+    public EventsController(RaceDayDbContext db, UploadPaths paths)
+    {
+        _db = db;
+        _paths = paths;
+    }
 
     // GET: api/events
     [HttpGet]
@@ -287,6 +295,7 @@ public class EventsController : ApiControllerBase
                 "Only JPG, JPEG, PNG, GIF and WEBP images are allowed."));
         }
 
+        var directory = _paths.EventBanners;
 
         Directory.CreateDirectory(directory);
 
@@ -367,7 +376,7 @@ public class EventsController : ApiControllerBase
     // Finds the locally stored banner file.
     private string? FindBannerFile(int eventId)
     {
-       
+        var directory = _paths.EventBanners;
 
         if (!Directory.Exists(directory))
         {
