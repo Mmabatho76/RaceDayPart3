@@ -1,0 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
+public class ParticipantController : BaseController
+{
+    private readonly RaceDayApiClient _api; public ParticipantController(RaceDayApiClient api) => _api = api;
+    public async Task<IActionResult> Index() { var g = Require("Participant"); if (g != null) return g; var (d, e, o) = await _api.Send<List<EventDto>>(HttpMethod.Get, "api/events"); ViewBag.Error = o ? null : e; return View(d ?? new()); }
+    public async Task<IActionResult> Event(int id) { var (d, e, o) = await _api.Send<EventDto>(HttpMethod.Get, $"api/events/{id}"); if (!o) { TempData["Error"] = e; return RedirectToAction("Index", "Home"); } return View(d); }
+    [HttpPost] public async Task<IActionResult> Enrol(int eventId, int categoryId) { var g = Require("Participant"); if (g != null) return g; var (_, e, o) = await _api.Send<EnrolmentDto>(HttpMethod.Post, $"api/events/{eventId}/enrolments", new { categoryId }); TempData[o ? "Success" : "Error"] = o ? "You have successfully entered this event." : e; return RedirectToAction(nameof(Event), new { id = eventId }); }
+    public async Task<IActionResult> MyEvents() { var g = Require("Participant"); if (g != null) return g; var (d, e, o) = await _api.Send<List<EnrolmentDto>>(HttpMethod.Get, "api/enrolments/mine"); ViewBag.Error = o ? null : e; return View(d ?? new()); }
+    public async Task<IActionResult> MyResults() { var g = Require("Participant"); if (g != null) return g; var (d, e, o) = await _api.Send<List<ResultDto>>(HttpMethod.Get, "api/results/mine"); ViewBag.Error = o ? null : e; return View(d ?? new()); }
+    public async Task<IActionResult> Profile() { var g = Require("Participant"); if (g != null) return g; var (d, e, o) = await _api.Send<UserDto>(HttpMethod.Get, "api/users/me"); ViewBag.Error = o ? null : e; return View(d ?? new()); }
+    [HttpPost] public async Task<IActionResult> UpdateProfile(string fullName, string phoneNumber) { var g = Require("Participant"); if (g != null) return g; var (d, e, o) = await _api.Send<UserDto>(HttpMethod.Put, "api/users/me", new { fullName, phoneNumber }); TempData[o ? "Success" : "Error"] = o ? "Profile updated." : e; if (o && d != null) HttpContext.Session.SetString("FullName", d.FullName); return RedirectToAction(nameof(Profile)); }
+    [HttpPost] public async Task<IActionResult> UploadPicture(IFormFile file) { var g = Require("Participant"); if (g != null) return g; if (file == null || file.Length == 0) { TempData["Error"] = "Choose an image."; return RedirectToAction(nameof(Profile)); } var (r, e) = await _api.Upload("api/users/me/profile-picture", file); TempData[r ? "Success" : "Error"] = r ? "Profile picture uploaded." : e; return RedirectToAction(nameof(Profile)); }
+}
