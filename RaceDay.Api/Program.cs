@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 using RaceDay.Api.Data;
 using Microsoft.Extensions.FileProviders;
 using RaceDay.Api.Security;
-
+using RaceDay.Api.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +22,10 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(60);
 });
 builder.Services.AddSingleton<IPasswordService, PasswordService>();
+
+// ---- Uploaded images (profile pictures + event banners) live outside the project folder ----
+var uploadsRoot = builder.Configuration["Uploads:Root"] ?? UploadPaths.DefaultRoot();
+builder.Services.AddSingleton(new UploadPaths(uploadsRoot));
 
 builder.Services.AddControllers();
 
@@ -63,7 +67,11 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseStaticFiles();
-
+// Serves /profile-pictures/... and /event-banners/... from the uploads folder.
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(app.Services.GetRequiredService<UploadPaths>().Root)
+});
 app.UseSession();
 app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 app.MapControllers();
