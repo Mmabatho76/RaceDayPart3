@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
 using RaceDay.Api.Dtos;
 using RaceDay.Api.Security;
-
+using RaceDay.Api.Storage;
 
 namespace RaceDay.Api.Controllers;
 
@@ -16,8 +16,15 @@ public class UsersController : ApiControllerBase
     private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
     private const long MaxPictureBytes = 2 * 1024 * 1024;
 
+    private readonly RaceDayDbContext _db;
+    private readonly UploadPaths _paths;
 
-    
+    public UsersController(RaceDayDbContext db, UploadPaths paths)
+    {
+        _db = db;
+        _paths = paths;
+    }
+
     /// <summary>Get the logged-in user's profile.</summary>
     /// <response code="200">Profile object.</response>
     /// <response code="401">No active session.</response>
