@@ -268,6 +268,10 @@ green tick on a commit means the build and every test passed.
 -   Dockerfile for the MVC site.
 -   GitHub Actions build-and-test workflow.
 
+
+## TESTS IMAGE:
+<img width="1917" height="861" alt="image" src="https://github.com/user-attachments/assets/09d261db-9220-41eb-bacc-5b1c8b40af2e" />
+
 ## YOUTUBE LINK: (add your Part 3 video link here)
 https://youtu.be/4faiGZYYwBk?si=Z5CmWv8PoEQbpu3x
 
