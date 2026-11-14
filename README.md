@@ -269,6 +269,11 @@ green tick on a commit means the build and every test passed.
 -   GitHub Actions build-and-test workflow.
 
 
+## CI/CD WORKFLOW:
+<img width="1518" height="440" alt="image" src="https://github.com/user-attachments/assets/5f38ba75-940a-4d00-bf7f-3ef881f7391c" />
+
+
+
 ## 14. Author
 
 **Mmabatho Vilakazi**\
