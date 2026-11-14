@@ -1,0 +1,2 @@
+@model List<EventDto>
+@{ViewData["Title"]="Participant home";}<h1 class="h2 fw-bold">Discover races</h1><p class="text-secondary">Choose an event and secure your place.</p><div class="row g-3">@foreach(var e in Model){<div class="col-md-6 col-lg-4"><div class="card h-100"><div class="card-body"><div class="event-date">@e.EventDate.ToString("dd MMM yyyy")</div><h3 class="h5 mt-2">@e.Name</h3><p>@e.Location · @e.DistanceKm km</p><a class="btn btn-primary" asp-action="Event" asp-route-id="@e.EventId">Event details</a></div></div></div>}</div>

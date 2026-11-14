@@ -1,0 +1,2 @@
+@model List<EnrolmentDto>
+@{ViewData["Title"]="My events";}<h1 class="h2 fw-bold">My event entries</h1><div class="card"><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Status</th></tr></thead><tbody>@foreach(var e in Model){<tr><td>@e.EventName</td><td>@e.EventDate.ToString("dd MMM yyyy")</td><td>@e.CategoryName</td><td><span class="badge @(e.Status=="Confirmed"?"status-confirmed":"status-pending")">@e.Status</span></td></tr>}</tbody></table></div></div>
